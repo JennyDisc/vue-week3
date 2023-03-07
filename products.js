@@ -25,6 +25,20 @@ const app = {
         };
     },
     methods: {
+        checkLogin() {
+            const loginCheckurl = `${site}api/user/check`;
+            axios.post(loginCheckurl)
+                .then(response => {
+                    // 觸發函式getProducts()
+                    this.getProducts();
+                })
+                .catch((error) => {
+                    // 驗證登入是否具有此api_path權限，若否跳出登入失敗視窗
+                    alert(error.data.message);
+                    // 轉址(轉跳到指定頁面)
+                    window.location = './login.html';
+                });
+        },
         // 取得產品列表
         getProducts() {
             const getProductsUrl = `${site}api/${api_path}/admin/products/all`;
@@ -37,8 +51,6 @@ const app = {
                 .catch((error) => {
                     // console.dir(error);
                     alert(error.data.message);
-                    // // 轉址(轉跳到指定頁面)
-                    // window.location = './login.html';
                 });
         },
         // 將html標籤內@click="openModal()"，括號內的參數帶入到函式openModal(status)的status
@@ -122,7 +134,7 @@ const app = {
         // 加入一次即可!!!後續axios會採用預設方式登入API
         // defaults表示每次發出token時，在headers加入屬性'Authorization'後方代入值(token)
         axios.defaults.headers.common['Authorization'] = myCookie;
-        this.getProducts();
+        this.checkLogin();
 
         // bootstrap互動視窗(Modal)
         // step1.初始化new。()內填html標籤內的 id 名稱
